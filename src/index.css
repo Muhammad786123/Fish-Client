@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-fg: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-fg: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-fg: var(--sidebar-foreground);
+}
+
+:root {
+  --primary: #0f2d5a;
+  --primary-foreground: #ffffff;
+  --accent: #0d9488;
+  --accent-foreground: #ffffff;
+  --background: #f1f5f9;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --muted: #e2e8f0;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --sidebar: #0f2d5a;
+  --sidebar-foreground: #e2e8f0;
+  --radius: 10px;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Hide scrollbars by default, show on hover */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* RTL support for Urdu */
+[dir="rtl"] {
+  font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif;
+}
+
+/* Table styles */
+.data-table thead th {
+  background: var(--primary);
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+[dir="rtl"] .data-table thead th {
+  text-align: right;
+}
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.data-table tbody tr:hover {
+  background: #f8fafc;
+}
+.data-table tbody td {
+  padding: 11px 16px;
+  font-size: 0.875rem;
+  color: var(--foreground);
+}
+
+/* Sidebar nav items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(226, 232, 240, 0.75);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+.nav-item.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Card hover */
+.kpi-card {
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 45, 90, 0.12);
+}
+
+/* Heading font */
+h1, h2, h3, h4, h5 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Mono for numbers/codes */
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Toast animations */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+.toast-enter {
+  animation: slideIn 0.3s ease-out;
+}
+.toast-exit {
+  animation: fadeOut 0.3s ease-in;
+}
+
+/* Status badge */
+.badge-paid    { background: #dcfce7; color: #15803d; }
+.badge-partial { background: #fef3c7; color: #b45309; }
+.badge-due     { background: #fee2e2; color: #b91c1c; }
+.badge-active  { background: #dbeafe; color: #1d4ed8; }
+.badge-warning { background: #fef3c7; color: #b45309; }
+.badge-inactive{ background: #f1f5f9; color: #64748b; }
+.badge-fish    { background: #e0f2fe; color: #0284c7; }
+.badge-ice     { background: #cffafe; color: #0891b2; }
+.badge-other   { background: #f3e8ff; color: #7e22ce; }
+
+/* ── Print Media Stylesheet Overrides ─────────────────────────────────────── */
+@media print {
+  /* 1. Scope visibility: hide everything on the page by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* 2. Explicitly show ONLY the dedicated report print area and its contents */
+  .report-print-area,
+  .report-print-area * {
+    visibility: visible !important;
+  }
+
+  /* 3. Position the report print area cleanly at the top-left of the printed sheet */
+  .report-print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  /* 4. Hide non-printable navigation, sidebar, header, modal controls & buttons */
+  header,
+  footer,
+  aside,
+  nav,
+  .no-print,
+  .no-print *,
+  .bottom-nav,
+  .toast-enter,
+  .toast-exit,
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 5. Remove height & scrollbar limits for unclipped multi-page table printing */
+  html,
+  body,
+  #root,
+  main,
+  .flex,
+  .flex-1,
+  .h-full,
+  .min-h-screen,
+  .overflow-hidden,
+  .overflow-x-auto,
+  .overflow-y-auto,
+  .overflow-auto,
+  [class*="max-h-"],
+  [class*="min-h-"] {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* 6. Table Formatting & Clean Page Breaks */
+  .data-table,
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto !important;
+  }
+
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tbody {
+    display: table-row-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  th, td {
+    color: #000000 !important;
+  }
+}
