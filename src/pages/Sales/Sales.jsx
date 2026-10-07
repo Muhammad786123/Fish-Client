@@ -27,12 +27,12 @@ export function SaleModal({
 
   const [form, setForm] = useState({
     date: sale?.date || new Date().toISOString().slice(0, 10),
-    customerId: sale?.customerId || customers[0]?.id || "",
-    fishId: sale?.fishId || fishTypes[0]?.id || "",
-    qty: sale?.qtyKg ? String(sale.qtyKg) : "50",
-    rate: sale?.ratePerKg ? String(sale.ratePerKg) : "850",
-    discount: sale?.discount ? String(sale.discount) : "0",
-    paid: sale?.paid ? String(sale.paid) : "0",
+    customerId: sale?.customerId || "",
+    fishId: sale?.fishId || "",
+    qty: sale?.qtyKg !== undefined && sale?.qtyKg !== null ? String(sale.qtyKg) : "",
+    rate: sale?.ratePerKg !== undefined && sale?.ratePerKg !== null ? String(sale.ratePerKg) : "",
+    discount: sale?.discount !== undefined && sale?.discount !== null ? String(sale.discount) : "0",
+    paid: sale?.paid !== undefined && sale?.paid !== null ? String(sale.paid) : "",
     paymentMethod: sale?.paymentMethod || "Cash",
     notes: sale?.notes || ""
   });
@@ -43,27 +43,27 @@ export function SaleModal({
         date: sale.date || new Date().toISOString().slice(0, 10),
         customerId: sale.customerId || "",
         fishId: sale.fishId || "",
-        qty: String(sale.qtyKg || 0),
-        rate: String(sale.ratePerKg || 0),
-        discount: String(sale.discount || 0),
-        paid: String(sale.paid || 0),
+        qty: sale.qtyKg !== undefined && sale.qtyKg !== null ? String(sale.qtyKg) : "",
+        rate: sale.ratePerKg !== undefined && sale.ratePerKg !== null ? String(sale.ratePerKg) : "",
+        discount: sale.discount !== undefined && sale.discount !== null ? String(sale.discount) : "0",
+        paid: sale.paid !== undefined && sale.paid !== null ? String(sale.paid) : "",
         paymentMethod: sale.paymentMethod || "Cash",
         notes: sale.notes || ""
       });
     } else {
       setForm({
         date: new Date().toISOString().slice(0, 10),
-        customerId: customers[0]?.id || "",
-        fishId: fishTypes[0]?.id || "",
-        qty: "50",
-        rate: "850",
+        customerId: "",
+        fishId: "",
+        qty: "",
+        rate: "",
         discount: "0",
-        paid: "0",
+        paid: "",
         paymentMethod: "Cash",
         notes: ""
       });
     }
-  }, [sale, open, customers, fishTypes]);
+  }, [sale, open]);
 
   const fish = fishTypes.find(f => f.id === form.fishId);
   const customer = customers.find(c => c.id === form.customerId);
@@ -86,6 +86,14 @@ export function SaleModal({
     }
     if (!form.fishId) {
       showToast("Please select a fish type. Add a fish type first if list is empty.", "error");
+      return;
+    }
+    if (!form.qty || parseFloat(form.qty) <= 0) {
+      showToast("Please enter a valid quantity.", "error");
+      return;
+    }
+    if (!form.rate || parseFloat(form.rate) <= 0) {
+      showToast("Please enter a valid rate per KG.", "error");
       return;
     }
     if (paidAmt > grandTotal) {
@@ -216,6 +224,7 @@ export default function Sales() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -231,6 +240,7 @@ export default function Sales() {
 
   const handleOpenAdd = () => {
     setEditTarget(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -393,6 +403,7 @@ export default function Sales() {
 
       {modalOpen && (
         <SaleModal
+          key={editTarget ? `edit-${editTarget.id}` : `new-${modalKey}`}
           open={modalOpen}
           sale={editTarget}
           onClose={() => {

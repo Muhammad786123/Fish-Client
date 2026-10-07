@@ -23,13 +23,13 @@ export function PurchaseModal({
 
   const [form, setForm] = useState({
     date: purchase?.date || new Date().toISOString().slice(0, 10),
-    supplierId: purchase?.supplierId || suppliers[0]?.id || "",
-    fishId: purchase?.fishId || fishTypes[0]?.id || "",
-    qty: purchase?.qtyKg ? String(purchase.qtyKg) : "250",
-    rate: purchase?.ratePerKg ? String(purchase.ratePerKg) : "650",
-    transport: purchase?.transportCost ? String(purchase.transportCost) : "0",
-    other: purchase?.otherCost ? String(purchase.otherCost) : "0",
-    paid: purchase?.paid ? String(purchase.paid) : "0",
+    supplierId: purchase?.supplierId || "",
+    fishId: purchase?.fishId || "",
+    qty: purchase?.qtyKg !== undefined && purchase?.qtyKg !== null ? String(purchase.qtyKg) : "",
+    rate: purchase?.ratePerKg !== undefined && purchase?.ratePerKg !== null ? String(purchase.ratePerKg) : "",
+    transport: purchase?.transportCost !== undefined && purchase?.transportCost !== null ? String(purchase.transportCost) : "0",
+    other: purchase?.otherCost !== undefined && purchase?.otherCost !== null ? String(purchase.otherCost) : "0",
+    paid: purchase?.paid !== undefined && purchase?.paid !== null ? String(purchase.paid) : "",
     paymentMethod: purchase?.paymentMethod || "Cash",
     notes: purchase?.notes || ""
   });
@@ -40,29 +40,29 @@ export function PurchaseModal({
         date: purchase.date || new Date().toISOString().slice(0, 10),
         supplierId: purchase.supplierId || "",
         fishId: purchase.fishId || "",
-        qty: String(purchase.qtyKg || 0),
-        rate: String(purchase.ratePerKg || 0),
-        transport: String(purchase.transportCost || 0),
-        other: String(purchase.otherCost || 0),
-        paid: String(purchase.paid || 0),
+        qty: purchase.qtyKg !== undefined && purchase.qtyKg !== null ? String(purchase.qtyKg) : "",
+        rate: purchase.ratePerKg !== undefined && purchase.ratePerKg !== null ? String(purchase.ratePerKg) : "",
+        transport: purchase.transportCost !== undefined && purchase.transportCost !== null ? String(purchase.transportCost) : "0",
+        other: purchase.otherCost !== undefined && purchase.otherCost !== null ? String(purchase.otherCost) : "0",
+        paid: purchase.paid !== undefined && purchase.paid !== null ? String(purchase.paid) : "",
         paymentMethod: purchase.paymentMethod || "Cash",
         notes: purchase.notes || ""
       });
     } else {
       setForm({
         date: new Date().toISOString().slice(0, 10),
-        supplierId: suppliers[0]?.id || "",
-        fishId: fishTypes[0]?.id || "",
-        qty: "250",
-        rate: "650",
-        transport: "7500",
+        supplierId: "",
+        fishId: "",
+        qty: "",
+        rate: "",
+        transport: "0",
         other: "0",
-        paid: "100000",
+        paid: "",
         paymentMethod: "Cash",
         notes: ""
       });
     }
-  }, [purchase, open, suppliers, fishTypes]);
+  }, [purchase, open]);
 
   const qty = parseFloat(form.qty) || 0;
   const rate = parseFloat(form.rate) || 0;
@@ -83,6 +83,14 @@ export function PurchaseModal({
     }
     if (!form.fishId) {
       showToast("Please select a fish type. Add a fish type first if list is empty.", "error");
+      return;
+    }
+    if (!form.qty || parseFloat(form.qty) <= 0) {
+      showToast("Please enter a valid quantity.", "error");
+      return;
+    }
+    if (!form.rate || parseFloat(form.rate) <= 0) {
+      showToast("Please enter a valid rate per KG.", "error");
       return;
     }
     const fish = fishTypes.find(f => f.id === form.fishId);
@@ -203,6 +211,7 @@ export default function Purchases() {
   const tr = t[lang];
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -210,6 +219,7 @@ export default function Purchases() {
 
   const handleOpenAdd = () => {
     setEditTarget(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -341,6 +351,7 @@ export default function Purchases() {
 
       {modalOpen && (
         <PurchaseModal
+          key={editTarget ? `edit-${editTarget.id}` : `new-${modalKey}`}
           open={modalOpen}
           purchase={editTarget}
           onClose={() => {

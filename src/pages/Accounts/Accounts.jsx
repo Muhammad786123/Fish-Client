@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "../../store";
 import { t } from "../../translations";
 import { PageHeader, SummaryCard, KPICard, fmt, Btn, Modal, Field, Input } from "../../components/common/ui";
@@ -8,6 +8,13 @@ function DepositModal({ open, onClose }) {
   const { cashBalance, depositToBank, showToast } = useApp();
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
+
+  useEffect(() => {
+    if (open) {
+      setAmount("");
+      setNotes("");
+    }
+  }, [open]);
 
   const handleDeposit = () => {
     const amt = parseFloat(amount);

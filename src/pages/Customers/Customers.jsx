@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "../../store";
 import { t } from "../../translations";
 import { PageHeader, Badge, SummaryCard, fmt, Btn, Modal, Field, Input, Select, EmptyState, Confirm } from "../../components/common/ui";
@@ -16,6 +16,26 @@ export function CustomerModal({ open, onClose, customer = null }) {
     opening: customer?.openingBalance ? String(customer.openingBalance) : "0",
     status: customer?.status || "active"
   });
+
+  useEffect(() => {
+    if (customer) {
+      setForm({
+        name: customer.name || "",
+        phone: customer.phone || "",
+        address: customer.address || "",
+        opening: customer.openingBalance !== undefined ? String(customer.openingBalance) : "0",
+        status: customer.status || "active"
+      });
+    } else {
+      setForm({
+        name: "",
+        phone: "",
+        address: "",
+        opening: "0",
+        status: "active"
+      });
+    }
+  }, [customer, open]);
 
   const handleSave = () => {
     if (!form.name.trim()) {
@@ -116,6 +136,7 @@ export default function Customers() {
   const tr = t[lang];
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editCustomer, setEditCustomer] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -126,6 +147,7 @@ export default function Customers() {
 
   const handleOpenAdd = () => {
     setEditCustomer(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -261,6 +283,7 @@ export default function Customers() {
 
       {modalOpen && (
         <CustomerModal
+          key={editCustomer ? `edit-${editCustomer.id}` : `new-${modalKey}`}
           open={modalOpen}
           customer={editCustomer}
           onClose={() => {

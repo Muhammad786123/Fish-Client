@@ -171,39 +171,61 @@ h1, h2, h3, h4, h5 {
 .badge-ice     { background: #cffafe; color: #0891b2; }
 .badge-other   { background: #f3e8ff; color: #7e22ce; }
 
-/* ── Print Media Stylesheet Overrides ─────────────────────────────────────── */
+/* ── Print Media Stylesheet: Robust, Dedicated Print Setup ───────────────── */
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
 @media print {
-  /* 1. Scope visibility: hide everything on the page by default */
-  body * {
-    visibility: hidden !important;
-  }
-
-  /* 2. Explicitly show ONLY the dedicated report print area and its contents */
-  .report-print-area,
-  .report-print-area * {
-    visibility: visible !important;
-  }
-
-  /* 3. Position the report print area cleanly at the top-left of the printed sheet */
-  .report-print-area {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
+  /* 1. Global Reset: Remove heights & scrollbars for natural unclipped document flow */
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
-    box-shadow: none !important;
+    color: #000000 !important;
   }
 
-  /* 4. Hide non-printable navigation, sidebar, header, modal controls & buttons */
+  #root,
+  .app-layout-root,
+  .app-main-wrapper,
+  .app-main-content,
+  main,
+  [class*="min-h-"],
+  [class*="max-h-"],
+  [class*="h-full"] {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* 2. Explicitly hide all app chrome and background elements (Zero layout footprint) */
   header,
   footer,
   aside,
   nav,
+  .app-sidebar,
+  .app-sidebar-mobile,
+  .app-header,
+  .app-footer,
+  .app-bottomnav,
+  .bottom-nav,
+  .reports-list-page,
+  .report-modal-chrome,
+  .modal-header-bar,
   .no-print,
   .no-print *,
-  .bottom-nav,
+  .toast-container,
   .toast-enter,
   .toast-exit,
   button,
@@ -211,63 +233,143 @@ h1, h2, h3, h4, h5 {
   select,
   textarea {
     display: none !important;
-    visibility: hidden !important;
   }
 
-  /* 5. Remove height & scrollbar limits for unclipped multi-page table printing */
-  html,
-  body,
-  #root,
-  main,
-  .flex,
-  .flex-1,
-  .h-full,
-  .min-h-screen,
-  .overflow-hidden,
-  .overflow-x-auto,
-  .overflow-y-auto,
-  .overflow-auto,
-  [class*="max-h-"],
-  [class*="min-h-"] {
+  /* 3. Reset Modal container: completely transparent & natural static flow */
+  .modal-backdrop-root {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+  }
+
+  .modal-dialog-content {
+    display: block !important;
+    position: static !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
     overflow: visible !important;
+    background: transparent !important;
+  }
+
+  .modal-body-container {
+    display: block !important;
+    width: 100% !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 4. Dedicated Printable Report Container: Normal document flow (No absolute positioning) */
+  .report-printable,
+  .report-print-area {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
-    box-shadow: none !important;
-    background: #ffffff !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
   }
 
-  body {
-    background-color: #ffffff !important;
-    color: #000000 !important;
+  /* 5. Official Print Header starts right at top of first page */
+  .report-print-header {
+    display: block !important;
+    margin: 0 0 12px 0 !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1.5px solid #0f172a !important;
   }
 
-  /* 6. Table Formatting & Clean Page Breaks */
+  /* 6. Table Formatting & Repeating Header on Every Printed Page */
+  .report-printable table,
+  .report-print-area table,
   .data-table,
   table {
     width: 100% !important;
     border-collapse: collapse !important;
     page-break-inside: auto !important;
+    margin-top: 8px !important;
   }
 
+  .report-printable thead,
+  .report-print-area thead,
+  thead {
+    display: table-header-group !important; /* Repeats table column headers on each page */
+  }
+
+  .report-printable tr,
+  .report-print-area tr,
   tr {
-    break-inside: avoid !important;
+    break-inside: avoid !important; /* Never splits a single row across page boundary */
     page-break-inside: avoid !important;
   }
 
-  thead {
-    display: table-header-group !important;
-  }
-
+  .report-printable tbody,
+  .report-print-area tbody,
   tbody {
     display: table-row-group !important;
   }
 
-  tfoot {
-    display: table-footer-group !important;
+  .report-printable th,
+  .report-printable td,
+  .report-print-area th,
+  .report-print-area td {
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 5px 8px !important;
+    font-size: 11px !important;
   }
 
-  th, td {
-    color: #000000 !important;
+  .report-printable thead th,
+  .report-print-area thead th {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #94a3b8 !important;
+  }
+
+  /* 7. Summary KPI Cards & Statement Blocks */
+  .report-printable .grid,
+  .report-print-area .grid {
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .report-printable .bg-white,
+  .report-print-area .bg-white {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* 8. Uncap all scrollable preview tables & containers */
+  .report-printable [class*="max-h-"],
+  .report-print-area [class*="max-h-"],
+  .report-printable [class*="overflow-"],
+  .report-print-area [class*="overflow-"] {
+    max-height: none !important;
+    overflow: visible !important;
   }
 }

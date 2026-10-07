@@ -278,12 +278,14 @@ export default function Payments() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [modalKey, setModalKey] = useState(0);
 
   const custPay = payments.filter(p => p.type === "customer");
   const suppPay = payments.filter(p => p.type === "supplier");
 
   const handleOpenAdd = () => {
     setEditTarget(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -399,6 +401,7 @@ export default function Payments() {
 
       {modalOpen && (
         <PaymentModal
+          key={editTarget ? `edit-${editTarget.id}` : `new-${modalKey}`}
           open={modalOpen}
           payment={editTarget}
           onClose={() => {

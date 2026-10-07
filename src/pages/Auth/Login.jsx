@@ -44,7 +44,8 @@ export default function Login() {
   };
 
   const handleDemoLogin = async (u) => {
-    const targetPass = u.password || `${u.username}123`;
+    const defaultPassword = `${u.username}123`;
+    const targetPass = (u.password && !u.password.startsWith("$2a$") && !u.password.startsWith("$2b$")) ? u.password : defaultPassword;
     setUsername(u.username);
     setPassword(targetPass);
     setError("");

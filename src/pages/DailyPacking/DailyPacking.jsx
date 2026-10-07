@@ -47,6 +47,7 @@ export default function DailyPacking() {
   const [dateFilter, setDateFilter] = useState("");
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editingRecord, setEditingRecord] = useState(null);
 
   const [detailRecord, setDetailRecord] = useState(null);
@@ -95,6 +96,7 @@ export default function DailyPacking() {
 
   const handleOpenNew = () => {
     setEditingRecord(null);
+    setModalKey((k) => k + 1);
     setIsFormOpen(true);
   };
 
@@ -280,6 +282,7 @@ export default function DailyPacking() {
       {/* Entry/Edit Form Modal */}
       {isFormOpen && (
         <DailyPackingFormModal
+          key={editingRecord ? `edit-${editingRecord.id}` : `new-${modalKey}`}
           open={isFormOpen}
           onClose={() => setIsFormOpen(false)}
           editingRecord={editingRecord}

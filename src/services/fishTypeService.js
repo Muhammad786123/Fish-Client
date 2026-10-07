@@ -64,18 +64,22 @@ export async function bulkSave(fishTypes = []) {
 export function recalculateFishTypeStock(fishType, purchases = [], sales = [], wastageRecords = []) {
   if (!fishType) return fishType;
 
-  const fPurchases = purchases.filter((p) => p.fishId === fishType.id);
-  const fSales = sales.filter((s) => s.fishId === fishType.id);
-  const fWastages = wastageRecords.filter((w) => w.fishId === fishType.id);
+  const typeName = (fishType.name || "").trim().toLowerCase();
+  const fPurchases = purchases.filter((p) => p.fishId === fishType.id || (!p.fishId && p.fishName && p.fishName.trim().toLowerCase() === typeName));
+  const fSales = sales.filter((s) => s.fishId === fishType.id || (!s.fishId && s.fishName && s.fishName.trim().toLowerCase() === typeName));
+  const fWastages = wastageRecords.filter((w) => w.fishId === fishType.id || (!w.fishId && w.fishName && w.fishName.trim().toLowerCase() === typeName));
 
   const totalPurchased = fPurchases.reduce((acc, p) => acc + (parseFloat(p.qtyKg) || 0), 0);
   const totalSold = fSales.reduce((acc, s) => acc + (parseFloat(s.qtyKg) || 0), 0);
   const totalWastage = fWastages.reduce((acc, w) => acc + (parseFloat(w.qtyKg) || 0), 0);
+  const openingStock = parseFloat(fishType.openingStock) || parseFloat(fishType.initialStock) || 0;
 
-  const calculatedStock = totalPurchased - totalSold - totalWastage;
+  const calculatedStock = openingStock + totalPurchased - totalSold - totalWastage;
 
   return {
     ...fishType,
+    openingStock,
+    initialStock: openingStock,
     totalPurchased,
     totalSold,
     totalWastage,

@@ -199,6 +199,7 @@ function WastageModal({ open, onClose, record = null }) {
 export default function Wastage() {
   const { wastageRecords, deleteWastage, showToast } = useApp();
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -208,6 +209,7 @@ export default function Wastage() {
 
   const handleOpenAdd = () => {
     setEditTarget(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -335,6 +337,7 @@ export default function Wastage() {
 
       {modalOpen && (
         <WastageModal
+          key={editTarget ? `edit-${editTarget.id}` : `new-${modalKey}`}
           open={modalOpen}
           record={editTarget}
           onClose={() => {

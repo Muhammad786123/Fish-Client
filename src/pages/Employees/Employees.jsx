@@ -23,7 +23,7 @@ export function EmployeeModal({ open, onClose, employee = null }) {
     phone: employee?.phone || "",
     position: employee?.position || "",
     category: employee?.category || "General Labour (Hall Labour)",
-    salary: employee?.salary ? String(employee.salary) : "16000",
+    salary: employee?.salary ? String(employee.salary) : "",
     joiningDate: employee?.joiningDate || new Date().toISOString().slice(0, 10),
     status: employee?.status || "active"
   });
@@ -35,7 +35,7 @@ export function EmployeeModal({ open, onClose, employee = null }) {
         phone: employee.phone || "",
         position: employee.position || "",
         category: employee.category || "General Labour (Hall Labour)",
-        salary: String(employee.salary || 16000),
+        salary: String(employee.salary || ""),
         joiningDate: employee.joiningDate || new Date().toISOString().slice(0, 10),
         status: employee.status || "active"
       });
@@ -45,7 +45,7 @@ export function EmployeeModal({ open, onClose, employee = null }) {
         phone: "",
         position: "",
         category: "General Labour (Hall Labour)",
-        salary: "16000",
+        salary: "",
         joiningDate: new Date().toISOString().slice(0, 10),
         status: "active"
       });
@@ -538,6 +538,7 @@ export default function Employees() {
 
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [attModalOpen, setAttModalOpen] = useState(false);
@@ -558,6 +559,7 @@ export default function Employees() {
 
   const handleOpenAdd = () => {
     setEditTarget(null);
+    setModalKey(k => k + 1);
     setAddModalOpen(true);
   };
 
@@ -710,6 +712,7 @@ export default function Employees() {
 
       {addModalOpen && (
         <EmployeeModal
+          key={editTarget ? `edit-${editTarget.id}` : `new-${modalKey}`}
           open={addModalOpen}
           employee={editTarget}
           onClose={() => {

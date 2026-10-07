@@ -154,6 +154,7 @@ export default function Expenses() {
   const { lang, expenses, deleteExpense, showToast } = useApp();
   const tr = t[lang];
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [catFilter, setCatFilter] = useState("All");
@@ -168,6 +169,7 @@ export default function Expenses() {
 
   const handleOpenAdd = () => {
     setEditTarget(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -306,6 +308,7 @@ export default function Expenses() {
 
       {modalOpen && (
         <ExpenseModal
+          key={editTarget ? `edit-${editTarget.id}` : `new-${modalKey}`}
           open={modalOpen}
           expense={editTarget}
           onClose={() => {

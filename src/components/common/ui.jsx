@@ -98,12 +98,12 @@ export function Modal({
     lg: "sm:max-w-lg",
     xl: "sm:max-w-2xl"
   };
-  return <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 print:static print:p-0" style={{
+  return <div className="modal-backdrop-root fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 print:static print:p-0" style={{
     background: "rgba(0,0,0,0.4)",
     backdropFilter: "blur(2px)"
   }}>
-      <div className={`bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full ${widths[size]} max-h-[92vh] flex flex-col print:max-h-none print:shadow-none print:border-none print:max-w-none`}>
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0 print:px-0 print:py-2" style={{
+      <div className={`modal-dialog-content bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full ${widths[size]} max-h-[92vh] flex flex-col print:max-h-none print:shadow-none print:border-none print:max-w-none`}>
+        <div className="modal-header-bar flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0 print:hidden" style={{
         borderColor: "var(--border)"
       }}>
           <h2 className="text-base sm:text-lg font-bold" style={{
@@ -114,7 +114,7 @@ export function Modal({
             <X size={18} className="text-slate-500" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 print:overflow-visible print:max-h-none print:px-0 print:py-2">{children}</div>
+        <div className="modal-body-container flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 print:overflow-visible print:max-h-none print:p-0">{children}</div>
       </div>
     </div>;
 }

@@ -173,9 +173,9 @@ function AppShell() {
   }
 
   return (
-    <div className="flex h-full overflow-hidden" style={{ background: "var(--background)" }}>
+    <div className="app-layout-root flex h-full overflow-hidden" style={{ background: "var(--background)" }}>
       {/* Desktop Sidebar — permanent, collapses to zero width */}
-      <div className="hidden lg:flex flex-col transition-all duration-300 overflow-hidden shrink-0" style={{
+      <div className="app-sidebar hidden lg:flex flex-col transition-all duration-300 overflow-hidden shrink-0" style={{
         width: sidebarOpen ? 240 : 0,
       }}>
         {sidebarOpen && <Sidebar />}
@@ -183,7 +183,7 @@ function AppShell() {
 
       {/* Mobile/Tablet sidebar — off-canvas drawer with backdrop */}
       {sidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 flex">
+        <div className="app-sidebar-mobile lg:hidden fixed inset-0 z-40 flex">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50"
@@ -197,9 +197,9 @@ function AppShell() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+      <div className="app-main-wrapper flex-1 flex flex-col overflow-hidden min-w-0">
         <Header />
-        <main className="flex-1 overflow-y-auto flex flex-col pb-16 md:pb-0" dir={lang === "ur" ? "rtl" : "ltr"}>
+        <main className="app-main-content flex-1 overflow-y-auto flex flex-col pb-16 md:pb-0" dir={lang === "ur" ? "rtl" : "ltr"}>
           <div className="flex-1">
             <PageRouter />
           </div>

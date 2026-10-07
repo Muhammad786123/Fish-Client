@@ -38,7 +38,7 @@ export function exportReportToPDF({
     doc.setDrawColor(226, 232, 240);
     doc.roundedRect(14, currentY, 182, 14, 2, 2, "FD");
 
-    doc.setFontSize(9);
+    doc.setFontSize(summary.length > 3 ? 8 : 9);
     const colWidth = 182 / summary.length;
     summary.forEach((s, i) => {
       const xOffset = 14 + (i * colWidth) + 4;

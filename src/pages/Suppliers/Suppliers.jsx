@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "../../store";
 import { t } from "../../translations";
 import { PageHeader, Badge, SummaryCard, fmt, Btn, Modal, Field, Input, Select, StatRow, TabBar, Confirm } from "../../components/common/ui";
@@ -26,6 +26,26 @@ export function SupplierModal({
     address: supplier?.address || "",
     status: supplier?.status || "active"
   });
+
+  useEffect(() => {
+    if (supplier) {
+      setForm({
+        name: supplier.name || "",
+        supplierType: supplier.supplierType || "Fish",
+        phone: supplier.phone || "",
+        address: supplier.address || "",
+        status: supplier.status || "active"
+      });
+    } else {
+      setForm({
+        name: "",
+        supplierType: "Fish",
+        phone: "",
+        address: "",
+        status: "active"
+      });
+    }
+  }, [supplier, open]);
 
   const handleSave = () => {
     if (!form.name.trim()) {
@@ -480,6 +500,7 @@ export default function Suppliers() {
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [editSupplier, setEditSupplier] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [typeFilter, setTypeFilter] = useState("All");
@@ -498,6 +519,7 @@ export default function Suppliers() {
 
   const handleOpenAdd = () => {
     setEditSupplier(null);
+    setModalKey(k => k + 1);
     setModalOpen(true);
   };
 
@@ -672,6 +694,7 @@ export default function Suppliers() {
 
       {modalOpen && (
         <SupplierModal
+          key={editSupplier ? `edit-${editSupplier.id}` : `new-${modalKey}`}
           open={modalOpen}
           supplier={editSupplier}
           onClose={() => {

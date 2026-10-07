@@ -13,6 +13,7 @@ export function FishTypeModal({ open, onClose, fishType = null }) {
   const [form, setForm] = useState({
     name: fishType?.name || "",
     urduName: fishType?.urduName || "",
+    openingStock: fishType?.openingStock !== undefined ? String(fishType.openingStock) : (fishType?.initialStock !== undefined ? String(fishType.initialStock) : "0"),
     avgPurchaseRate: fishType?.avgPurchaseRate ? String(fishType.avgPurchaseRate) : "500",
     avgSaleRate: fishType?.avgSaleRate ? String(fishType.avgSaleRate) : "700"
   });
@@ -27,11 +28,15 @@ export function FishTypeModal({ open, onClose, fishType = null }) {
       return;
     }
 
+    const openingStockVal = parseFloat(form.openingStock) || 0;
+
     if (isEdit) {
       updateFishType({
         ...fishType,
         name: form.name.trim().slice(0, MAX_NAME_LENGTH),
         urduName: form.urduName.trim() || form.name.trim(),
+        openingStock: openingStockVal,
+        initialStock: openingStockVal,
         avgPurchaseRate: parseFloat(form.avgPurchaseRate) || 0,
         avgSaleRate: parseFloat(form.avgSaleRate) || 0
       });
@@ -41,7 +46,9 @@ export function FishTypeModal({ open, onClose, fishType = null }) {
         id: `f${Date.now()}`,
         name: form.name.trim().slice(0, MAX_NAME_LENGTH),
         urduName: form.urduName.trim() || form.name.trim(),
-        currentStock: 0,
+        openingStock: openingStockVal,
+        initialStock: openingStockVal,
+        currentStock: openingStockVal,
         avgPurchaseRate: parseFloat(form.avgPurchaseRate) || 0,
         avgSaleRate: parseFloat(form.avgSaleRate) || 0,
         totalPurchased: 0,
@@ -70,6 +77,14 @@ export function FishTypeModal({ open, onClose, fishType = null }) {
             value={form.urduName}
             onChange={e => setForm(f => ({ ...f, urduName: e.target.value }))}
             placeholder="روہو"
+          />
+        </Field>
+        <Field label="Opening Stock (KG)">
+          <Input
+            type="number"
+            value={form.openingStock}
+            onChange={e => setForm(f => ({ ...f, openingStock: e.target.value }))}
+            placeholder="0"
           />
         </Field>
         <div className="grid grid-cols-2 gap-3">

@@ -989,6 +989,7 @@ export function AppProvider({ children }) {
       if (res.success) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.user });
         showToast(`Welcome back, ${res.user.name}!`, "success");
+        await loadData();
 
         // Non-blocking background daily backup check for Super Admin
         if (res.user && res.user.role === "SUPER_ADMIN") {
@@ -1006,7 +1007,7 @@ export function AppProvider({ children }) {
       }
       return res;
     },
-    [showToast]
+    [showToast, loadData]
   );
 
   const logout = useCallback(async () => {
